@@ -1,19 +1,16 @@
 import { Module }         from '@nestjs/common';
-import { ConfigModule}    from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-
-const environment = process.env.NODE_ENV || 'development'
+import {TransformInterceptor} from './transform.interceptor'
+import { configModule } from './configure.root';
 
 @Module({
   imports: [UserModule, AuthModule,
-  
-    ConfigModule.forRoot ({
-      envFilePath : `.env.${environment}`,
-      isGlobal : true
-    }),
+
+    configModule,
     MongooseModule.forRoot(
       process.env.MONODB_WRITE_CONECTION,
       {
@@ -23,6 +20,12 @@ const environment = process.env.NODE_ENV || 'development'
     )
   
   ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
+  ]
 
 
 })

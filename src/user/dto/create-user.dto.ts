@@ -1,6 +1,15 @@
 import { IAddress } from "../interfaces/address.interface";
+import { Exclude } from 'class-transformer';
 
 export class CreateUserDto {
+
+    constructor(partial: Partial<CreateUserDto>) {
+        Object.assign(this, partial);
+      }
+    
+    readonly id : string;
+    @Exclude()
+    readonly password: string;
     readonly email: string;
     readonly avatar: string;
     readonly avatarId: string;
@@ -11,6 +20,5 @@ export class CreateUserDto {
     readonly profession: string;
     readonly searchField: string;
     readonly phone: string;
-    readonly roles: Array<string>;
-    readonly password: string;
+   
 }
